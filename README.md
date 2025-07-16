@@ -24,8 +24,11 @@ O objetivo é reduzir distrações e manter o foco ao consumir conteúdo útil n
 5. Pronto! A extensão estará ativa e funcionando
 
 youtube-cleaner/
+
 ├── content.js       # Código que remove os elementos
+
 ├── manifest.json    # Configuração da extensão
+
 └── README.md        # Este arquivo
 
 📦 Requisitos
