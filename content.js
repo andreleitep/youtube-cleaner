@@ -1,49 +1,35 @@
-function removeRelated() {
-    const related = document.getElementById('related');
-    if (related) {
-        related.remove();
-    }
-}
+function cleanYouTube() {
+    // Remove vídeos relacionados (sidebar)
+    const related = document.querySelector('#related');
+    if (related) related.remove();
 
-function removeShorts() {
     // Remove blocos de Shorts da home
-    const shortsShelf = Array.from(document.querySelectorAll('ytd-rich-section-renderer'));
-    shortsShelf.forEach(el => {
-        if (el.innerText.includes('Shorts')) {
-            el.remove();
-        }
+    const shortsShelves = document.querySelectorAll('ytd-rich-section-renderer');
+    shortsShelves.forEach(el => {
+        if (el.innerText.toLowerCase().includes('shorts')) el.remove();
     });
 
-    // Remove vídeos shorts individuais (cards) em recomendações
-    const thumbnails = document.querySelectorAll('a#thumbnail[href*="/shorts/"]');
-    thumbnails.forEach(el => {
+    // Remove vídeos shorts individuais (em grades e recomendações)
+    const shortThumbs = document.querySelectorAll('a#thumbnail[href*="/shorts/"]');
+    shortThumbs.forEach(el => {
         const parent = el.closest('ytd-grid-video-renderer, ytd-rich-item-renderer, ytd-video-renderer');
         if (parent) parent.remove();
     });
 
-    // Redireciona se for um vídeo curto aberto diretamente
+    // Remove sugestões de vídeos ao final dos vídeos (endscreen)
+    const endOverlays = document.querySelectorAll('.ytp-ce-element, .ytp-endscreen-content');
+    endOverlays.forEach(el => el.remove());
+
+    // Redireciona Shorts abertos diretamente
     if (window.location.pathname.startsWith('/shorts/')) {
         const id = window.location.pathname.split('/')[2];
-        window.location.replace(`https://www.youtube.com/watch?v=${id}`);
+        if (id) window.location.replace(`https://www.youtube.com/watch?v${id}`);
     }
 }
 
-function removeEndScreens() {
-    const overlays = document.querySelectorAll('.ytp-ce-element'); // elementos de "cards" finais
-    overlays.forEach(el => el.remove());
+// Executa imediatamente
+cleanYouTube();
 
-    const endScreenContainer = document.querySelector('.ytp-endscreen-content');
-    if (endScreenContainer) endScreenContainer.remove();
-}
-
-// Tenta remover imediatamente
-removeRelated();
-removeShorts();
-removeEndScreens();
-
-// Reaplica a cada 1 segundo (porque o YouTube é SPA e recarrega dinamicamente)
-setInterval(() => {
-    removeRelated();
-    removeShorts();
-    removeEndScreens();
-}, 1000);
+// Observa mudanças no DOM (SPA = Single Page App)
+const observer = new MutationObserver(() => cleanYouTube());
+observer.observe(document.body, {childList: true, subtree: true});
