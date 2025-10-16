@@ -1,14 +1,14 @@
 {
-    "manifest_version": 3,
-    "name": "Youtube Cleaner",
-    "version": "1.0",
-    "description": "Remove vídeos relacionados do Youtube.",
-    "content_scripts": [
-        {
-            "matches": ["*://www.youtube.com/*"],
-            "js": ["content.js"],
-            "run_at": "document_idle"
-        }
-    ],
-    "permissions": ["scripting"]
+  "manifest_version": 3,
+  "name": "YouTube Cleaner",
+  "version": "1.0",
+  "description": "Remove Shorts, vídeos relacionados e telas finais do YouTube.",
+  "permissions": ["scripting", "activeTab"],
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ]
 }
