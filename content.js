@@ -183,4 +183,24 @@
   window.__youtubeCleaner = { cleanYouTube, removeIfMatches };
 
   console.log('[YC] init complete');
+  
+  // Redireciona Shorts abertos diretamente para a versão normal
+  function redirectShorts() {
+    if (window.location.pathname.startsWith('/shorts/')) {
+      const id = window.location.pathname.split('/')[2];
+      if (id) {
+        const normal = `https://www.youtube.com/watch?v=${id}`;
+        if (window.location.href !== normal) {
+          console.log('[YC] redirecting short → normal video:', id);
+          window.location.replace(normal);
+        }
+      }
+    }
+  }
+
+  // Executa imediatamente e também ao trocar de página (SPA do YouTube)
+  redirectShorts();
+  window.addEventListener('yt-navigate-finish', redirectShorts);
+
+  console.log('[YC] init complete + shorts redirect active');
 })();
